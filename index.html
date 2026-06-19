@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chu</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>  
+    <div class="container">
+        <header>
+            <h1>"E-Wallet: Finance Manager"</h1>
+        </header>
+
+        <div class="card" style="margin-bottom: 25px; display: flex; align-items: center; gap: 15px;">
+            <label for="month_filter" style="font-weight: 600; margin-bottom: 0;">Chon thang xem du lieu:</label>
+            <input type="month" id="month_filter" style="width: auto; max-width: 200px; margin-bottom: 0;" />
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <div class="card-title">So Du Hien Tai</div>
+                <h2 id="soDuHienTai">0 ₫</h2>
+            </div>
+            
+            <div class="card" style="grid-column: span 2;">
+                <div class="card-title">Tong thu & Tong chi (Thang nay)</div>
+                <div style="display: flex; gap: 40px; align-items: center; height: 100%; padding-bottom: 10px;">
+                    <div>Tong Thu nhap (+): <span id="thuThangNay" class="text-success font-bold" style="font-size: 1.5rem;">0 ₫</span></div>
+                    <div>Tong Chi tieu (-): <span id="chiThangNay" class="text-danger font-bold" style="font-size: 1.5rem;">0 ₫</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 25px;">
+            <div class="card-title" style="display: flex; justify-content: space-between;">
+                <span>Ngan sach tong (Thang)</span>
+                <span id="budget_percent" class="font-bold">Đa dung: 0%</span>
+            </div>
+            <div style="background-color: #dee2e6; border-radius: 4px; height: 12px; width: 100%; overflow: hidden; margin: 10px 0;">
+                <div id="budget_progress" style="background-color: var(--success-color); height: 100%; width: 0%; transition: width 0.3s ease;"></div>
+            </div>
+            <div id="budget_status_text" class="text-muted" style="font-size: 0.9rem;">Con lai: 0 ₫ trong ngan sach thang.</div>
+        </div>
+
+        <div class="app-sections">
+            <div class="main-column">
+                <div class="card">
+                    <div class="card-title">Them Giao Dich Moi</div>
+                    <form id="transaction_form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="tx_type">Loai giao dich</label>
+                                <select id="tx_type">
+                                    <option value="expense">Khoan Chi (Rut ra -)</option>
+                                    <option value="income">Khoan Thu (Thu vao +)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="tx_money">So tien (VND)</label>
+                                <input type="number" id="tx_money" required min="1" placeholder="Nhap so tien..." />
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="form_select">Danh muc</label>
+                                <select id="form_select" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="tx_date">Ngay giao dich</label>
+                                <input type="date" id="tx_date" required />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tx_note">Ghi chu</label>
+                            <input type="text" id="tx_note" placeholder="Nhap ghi chu..." />
+                        </div>
+
+                        <button type="submit" class="btn btn-success" style="width: 100%;">Luu Giao Dich</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Lich Su Giao Dich</div> 
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ngay</th>
+                                    <th>Danh Muc</th>
+                                    <th>Ghi Chu</th>
+                                    <th>So Tien</th>
+                                    <th>Thao Tac</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionHistoryBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Tong Hop Chi Tieu Cac Thang</div>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Thang</th>
+                                    <th>Tong Chi Tieu</th>
+                                    <th>Trang Thai</th>
+                                </tr>
+                            </thead>
+                            <tbody id="summaryTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> 
+
+            <div class="side-column">
+                <div class="card">
+                    <div class="card-title">Quan Ly Danh Muc</div>
+                    <div style="overflow-x: auto; margin-bottom: 20px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Danh Muc</th>
+                                    <th>Han Muc</th>
+                                    <th>Đa Tieu</th>
+                                    <th>Thao Tac</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBodyCategory"></tbody>
+                        </table>
+                    </div>
+
+                    <div style="border-top: 1px solid var(--border-color); padding-top: 16px;">
+                        <div style="font-weight: 600; margin-bottom: 12px; font-size: 0.95rem;">Them Danh Muc Mới</div>
+                        <form id="category_form">
+                            <div class="form-group">
+                                <label for="new_category_title">Ten danh muc</label>
+                                <input type="text" id="new_category_title" required placeholder="Vi du: Ăn Uong..." />
+                            </div>
+                            <div class="form-group">
+                                <label for="new_category_limit">Han muc canh bao (0 la khong gioi han)</label>
+                                <input type="number" id="new_category_limit" value="0" min="0" placeholder="Vi du: 1000000..." />
+                            </div>
+                            <button type="submit" class="btn btn-outline-primary" style="width: 100%;">Them Danh Muc</button>
+                        </form>
+                    </div>
+                </div>
+            </div> 
+        </div> 
+    </div> 
+    <script type="module" src="/app.js"></script>
+</body>
+</html>
